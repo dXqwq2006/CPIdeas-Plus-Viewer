@@ -1,21 +1,77 @@
 # CPIdeas Plus Viewer
 
-Read-only local web viewer for CPIdeas Plus product bundles.
+[简体中文](README.zh-CN.md)
 
-This repository contains only the public viewer surface. It does not include AI generation, prompts, checkpoints, batch runners, LiveCodeBench importers, verifier repair loops, or private workbench actions.
+CPIdeas Plus Viewer is a read-only local web viewer for delivered CPIdeas Plus product bundles. It is intended for reviewers, customers, and stakeholders who need to browse generated problem packages without accessing the private AI generation pipeline.
 
-## Run From Source With uv
+## What It Supports
+
+- Browse one delivered problem bundle or a batch of problem bundles.
+- Read the problem statement, input/output format, constraints, samples, and expected solution notes.
+- View localized statement/review/preview files when they are included in the bundle.
+- Inspect verification summaries when `verification/cpideas_report.json` is included.
+- Inspect text files inside the delivered `package/`, such as statements, solutions, generators, validators, checkers, and package config.
+- Run entirely on localhost; no external service or network backend is required after dependencies are installed.
+- Use a stable product bundle schema: `cpideas-plus-product-v1`.
+
+## What It Does Not Include
+
+- No AI generation prompts or raw model outputs.
+- No checkpoints, repair traces, batch runners, LiveCodeBench importers, or private workbench actions.
+- No preview/verify/resume/submit buttons in the standalone public viewer.
+- No server-side mutation of product bundles.
+
+The standalone viewer is intentionally read-only. Its capability endpoint reports:
+
+```json
+{
+  "actions_enabled": false,
+  "submission_enabled": false,
+  "internal_files_enabled": false,
+  "mode": "viewer",
+  "supported_bundle_schema": "cpideas-plus-product-v1"
+}
+```
+
+## Bundle Layout
+
+A single delivered problem bundle usually looks like:
+
+```text
+product_single/
+  run.json
+  package/
+    config/package.json
+    statements/statement.md
+    solutions/main.cpp
+    generator/generator.cpp
+    generator_script/generate.json
+```
+
+A delivered batch contains `batch_index.json` plus one subdirectory per problem.
+
+See `docs/PRODUCT_BUNDLE.md` for the full contract.
+
+## Run With uv
 
 ```bash
 uv sync
 uv run cpideas-viewer --runs-dir examples/product_single --host 127.0.0.1 --port 8765
 ```
 
+Open the printed URL in your browser.
+
+For the batch-style example:
+
+```bash
+uv run cpideas-viewer --runs-dir examples/product_batch
+```
+
+`--runs-dir` may point either to a single run directory containing `run.json`, or to a parent directory containing multiple runs/batches.
+
 `uv sync` may create an environment without `pip`; use `uv run ...` or `uv pip install -e .` instead of `uv run python -m pip install -e .`.
 
-## Run After pip Install
-
-If you prefer standard pip, create a venv with pip first:
+## Run With pip
 
 ```bash
 python -m venv .venv
@@ -24,36 +80,15 @@ python -m pip install -e .
 cpideas-viewer --runs-dir examples/product_single --host 127.0.0.1 --port 8765
 ```
 
-Then open the printed URL.
+## Customer Delivery Checklist
 
-For a batch-style fixture:
+- Deliver only product bundles, not private generation artifacts.
+- Confirm each bundle contains `run.json` and `package/config/package.json`.
+- Confirm the viewer opens the bundle locally before delivery.
+- If sharing a batch, include `batch_index.json` at the batch root.
+- If localized Markdown is included, keep filenames such as `review.zh-CN.md` and `preview.zh-CN.md` next to the English files.
 
-```bash
-uv run cpideas-viewer --runs-dir examples
-```
-
-## Bundle Contract
-
-The viewer supports product bundle schema:
-
-```text
-cpideas-plus-product-v1
-```
-
-See `docs/PRODUCT_BUNDLE.md` for the file layout and compatibility rules.
-
-## Capabilities
-
-The standalone viewer is intentionally read-only:
-
-- `actions_enabled=false`
-- `submission_enabled=false`
-- `internal_files_enabled=false`
-- `mode=viewer`
-
-Private CPIdeas Plus workbench integrations can inject their own action backend, but that backend is not part of this public package.
-
-## Development
+## Development Checks
 
 ```bash
 uv run python -m unittest discover -s tests -v
