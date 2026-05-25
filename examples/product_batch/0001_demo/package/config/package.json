@@ -1,0 +1,11 @@
+{
+  "schema_version": "cpideas.package.v1",
+  "id": "public-viewer-demo",
+  "title": "Public Viewer Demo",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 1024,
+  "language": "cpp17",
+  "statements": {
+    "default": "statements/statement.md"
+  }
+}

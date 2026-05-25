@@ -1,0 +1,38 @@
+{
+  "schema_version": "cpideas.product_run.v1",
+  "export_mode": "product",
+  "seed": {
+    "id": "public-viewer-demo",
+    "title": "Public Viewer Demo",
+    "statement": "Solve the public viewer demo.",
+    "source": "example-fixture",
+    "metadata": {}
+  },
+  "formal_statement": {
+    "title": "Public Viewer Demo",
+    "statement": "Solve the public viewer demo.",
+    "input_format": "The first line contains T.",
+    "output_format": "Print one answer per case.",
+    "constraints": ["1 <= T <= 3"],
+    "notes": []
+  },
+  "idea": {
+    "title": "Public Viewer Demo",
+    "statement": "Solve the public viewer demo.",
+    "input_format": "The first line contains T.",
+    "output_format": "Print one answer per case.",
+    "constraints": ["1 <= T <= 3"],
+    "samples": [],
+    "expected_solution": "Use direct simulation.",
+    "target_difficulty": "demo"
+  },
+  "verification_plan": {},
+  "artifacts": {},
+  "polygon": {
+    "name": "public-viewer-demo",
+    "time_limit_ms": 2000,
+    "memory_limit_mb": 1024,
+    "standard": "cpp17"
+  },
+  "native_package_path": "package"
+}
