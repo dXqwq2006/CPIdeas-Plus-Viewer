@@ -29,7 +29,6 @@ TEXT_SUFFIXES = {
 MAX_TEXT_BYTES = 512 * 1024
 LOG_TAIL_BYTES = 64 * 1024
 MAX_SUBMISSION_BYTES = 256 * 1024
-PRODUCT_BUNDLE_SCHEMA = "cpideas-plus-product-v1"
 INTERNAL_VIEWER_DIRS = frozenset(
     {"prompts", "ai_outputs", "checkpoints", "repairs", "ui_jobs", "submissions"}
 )
@@ -560,7 +559,6 @@ class CPIdeasUIHandler(BaseHTTPRequestHandler):
             "submission_enabled": actions_enabled,
             "internal_files_enabled": self.internal_files_enabled,
             "mode": "workbench" if actions_enabled else "viewer",
-            "supported_bundle_schema": PRODUCT_BUNDLE_SCHEMA,
         }
 
     def _require_action_backend(self) -> UIActionBackend:

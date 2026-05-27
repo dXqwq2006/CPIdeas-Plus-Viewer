@@ -9,7 +9,6 @@ from tempfile import TemporaryDirectory
 import cpideas_plus_viewer.cli as viewer_cli
 import cpideas_plus_viewer.server as viewer_server
 from cpideas_plus_viewer.server import (
-    PRODUCT_BUNDLE_SCHEMA,
     UIError,
     build_run_detail,
     create_ui_server,
@@ -96,11 +95,19 @@ class PublicViewerTest(unittest.TestCase):
                 server.shutdown()
                 server.server_close()
 
-            self.assertEqual(capabilities["supported_bundle_schema"], PRODUCT_BUNDLE_SCHEMA)
             self.assertFalse(capabilities["actions_enabled"])
             self.assertFalse(capabilities["submission_enabled"])
             self.assertFalse(capabilities["internal_files_enabled"])
             self.assertEqual(capabilities["mode"], "viewer")
+            self.assertEqual(
+                set(capabilities),
+                {
+                    "actions_enabled",
+                    "submission_enabled",
+                    "internal_files_enabled",
+                    "mode",
+                },
+            )
             self.assertEqual(preview_error[0], 403)
             self.assertNotIn(
                 "prompts/solution_probe_1.md",

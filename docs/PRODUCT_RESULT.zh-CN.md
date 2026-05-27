@@ -1,23 +1,13 @@
-# Product Viewer Bundle Contract
+# Product Result Contract
 
-本文定义 CPIdeas Plus Viewer 支持的交付包结构。它是私有 AI/workbench 仓库与公开 viewer 之间的稳定边界。
-
-## Schema
-
-当前 viewer 支持的 bundle schema：
-
-```text
-cpideas-plus-product-v1
-```
-
-HTTP capability endpoint 会在 `supported_bundle_schema` 中返回这个值。
+本文定义 CPIdeas Plus Viewer 支持的 product result 结构。它是私有 AI/workbench 仓库与公开 viewer 之间的稳定边界。
 
 ## 支持的目录结构
 
-单个题目交付包：
+单个 product result：
 
 ```text
-<bundle>/
+<product-result>/
   run.json
   package/
     config/package.json
@@ -25,10 +15,10 @@ HTTP capability endpoint 会在 `supported_bundle_schema` 中返回这个值。
     ... native CPIdeas package files ...
 ```
 
-批量交付包：
+Product batch result：
 
 ```text
-<bundle>/
+<product-result>/
   batch_index.json
   <run-dir>/
     run.json
@@ -51,13 +41,15 @@ HTTP capability endpoint 会在 `supported_bundle_schema` 中返回这个值。
 - `idea`：viewer 展示用的产品题面 payload。
 - `native_package_path`：通常为 `package`。
 
-`package/config/package.json` 描述题目包元信息。viewer 会用它定位 statement 文件并展示 package metadata。
+`batch_index.json` 存在时使用 `schema_version: cpideas.product_batch.v1`，并列出 product run 目录。
+
+`package/config/package.json` 描述题目包元信息。Viewer 会用它定位 statement 文件并展示 package metadata。
 
 `package/statements/statement.md` 或 package config 中的 `statements.default` 路径应存在，用作题面 fallback。
 
 ## 可选文件
 
-下列文件缺失时，viewer 仍可打开交付包；如果存在，则会只读展示：
+下列文件缺失时，viewer 仍可打开 product result；如果存在，则会只读展示：
 
 - `review.md` 和 `review.<locale>.md`。
 - `preview.md` 和 `preview.<locale>.md`。
@@ -67,7 +59,7 @@ HTTP capability endpoint 会在 `supported_bundle_schema` 中返回这个值。
 
 ## 不应交付的内部文件
 
-Product bundle 不应依赖或暴露私有生成产物：
+Product result 不应依赖或暴露私有生成产物：
 
 - `prompts/`。
 - `ai_outputs/`。
@@ -87,8 +79,7 @@ Public viewer mode 不注入 action backend。能力接口返回：
   "actions_enabled": false,
   "submission_enabled": false,
   "internal_files_enabled": false,
-  "mode": "viewer",
-  "supported_bundle_schema": "cpideas-plus-product-v1"
+  "mode": "viewer"
 }
 ```
 
@@ -97,6 +88,6 @@ Public viewer mode 不注入 action backend。能力接口返回：
 ## 兼容规则
 
 - `run.json`、`batch_index.json` 和 package config 允许添加字段。
-- 在 `cpideas-plus-product-v1` 生命周期内，已有字段语义应保持稳定。
-- 破坏 schema 的修改需要新的 `supported_bundle_schema` 值和 contract tests。
+- `cpideas.product_run.v1` 与 `cpideas.product_batch.v1` 中已有字段语义应保持稳定。
+- 破坏 schema 的修改需要新的 product run/batch schema 值和 contract tests。
 - viewer 应忽略未知字段，并对不安全路径或非法 JSON 清晰失败。

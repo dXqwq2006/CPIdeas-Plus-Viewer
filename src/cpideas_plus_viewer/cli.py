@@ -9,13 +9,13 @@ from .server import serve_ui
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="cpideas-viewer",
-        description="Start the read-only CPIdeas Plus product bundle viewer.",
+        description="Start the read-only CPIdeas Plus product result viewer.",
     )
     parser.add_argument(
         "--runs-dir",
         default=Path("runs"),
         type=Path,
-        help="Directory containing imported product run bundles. Default: runs",
+        help="Directory containing imported product results. Default: runs",
     )
     parser.add_argument(
         "--host", default="127.0.0.1", help="Host to bind. Default: 127.0.0.1"
